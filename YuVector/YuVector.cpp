@@ -34,11 +34,11 @@ double YuVector::getLength() const {
 };
 //==============================================================================
 void YuVector::show() const {
-	cout << "[" << this << "] vector's components:" << endl;
+	cout << "[0x" << this << "]" << endl;
 	cout << "e1 = " << mE1 << endl;
 	cout << "e2 = " << mE2 << endl;
 	cout << "e3 = " << mE3 << endl;
-	cout << endl;
+	//cout << endl;
 };
 //==============================================================================
 YuVector operator+(const YuVector& pLeftVec, const YuVector& pRightVec) {
