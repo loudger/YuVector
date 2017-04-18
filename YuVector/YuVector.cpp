@@ -86,10 +86,18 @@ YuVectorListItem::~YuVectorListItem() {
 YuVectorList::YuVectorList() :mLength(0), mFirst(NULL), mCurr(NULL), mCursor(NULL) {};
 //==============================================================================
 YuVectorList::~YuVectorList() {
-	//@BUG
-	for (size_t i = (mLength - 1); i >= 0; i--) {
-		(*this)[i]->~YuVectorListItem();
+	size_t i = 0;
+	while (mLength > 1) {
+		mCursor = mFirst;
+		mFirst = mFirst->getNext();
+		mFirst->setPrev(NULL);
 		mLength--;
+		mCursor->~YuVectorListItem();
+		i++;
+	}
+	if (mLength == 1) {
+		mLength--;
+		mFirst->~YuVectorListItem();
 	}
 	mLength = 0;
 	mFirst = mCurr = mCursor = NULL;
@@ -173,6 +181,43 @@ void YuVectorList::add(YuVector* pVec, size_t pIndex) {
 //==============================================================================
 void YuVectorList::add(YuVector* pVec) {
 	add(pVec, mLength);
+}
+//==============================================================================
+void YuVectorList::remove(size_t pIndex) {
+	if (mLength > 1) {
+		if (pIndex == 0) {
+			mCursor = this->getFirstItem();
+			mCursor->getNext()->setPrev(NULL);
+			mCursor->~YuVectorListItem();
+			mLength--;
+		}
+		else if (pIndex == (mLength - 1)) {
+			mCursor = this->getCurrentItem();
+			mCursor->getPrev()->setNext(NULL);
+			mCursor->~YuVectorListItem();
+			mLength--;
+		}
+		else if ((pIndex > 0) && (pIndex < (mLength - 1))) {
+			mCursor = this->getFirstItem();
+			for (size_t i = 0; i < pIndex; i++) {
+				mCursor = mCursor->getNext();
+			};
+			mCursor->getPrev()->setNext(mCursor->getNext());
+			mCursor->getNext()->setPrev(mCursor->getPrev());
+			mCursor->~YuVectorListItem();
+			mLength--;
+		}
+		else {
+			; // error code
+		}
+	}
+	else if (mLength == 1) {
+		this->getFirstItem()->~YuVectorListItem();
+		mLength--;
+	}
+	else {
+		; // empty list
+	}
 }
 //==============================================================================
 YuVectorListItem* YuVectorList::operator[] (size_t pIndex) const {

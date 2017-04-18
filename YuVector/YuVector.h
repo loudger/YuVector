@@ -101,6 +101,8 @@ public:
 
 	void add(YuVector* pVec, size_t pIndex);
 
+	void remove(size_t pIndex);
+
 	void show() const;
 
 	YuVectorListItem* operator[] (size_t pIndex) const;
